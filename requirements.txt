@@ -1,0 +1,14 @@
+flask
+flask-restful
+flask-cors
+gunicorn
+pymongo
+srv
+Flask-PyMongo
+python-dotenv
+requests
+flask-cors
+certifi
+Pillow
+boto3
+qrcode
