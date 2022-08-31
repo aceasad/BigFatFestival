@@ -34,7 +34,7 @@ def generateCode(data,email):
     qr = qrcode.QRCode(version = 2,
                    box_size = 10,
                    border = 5) 
-    qr.add_data("http://13.235.83.97:4242/qrinfo?email="+email) #Adding the data to be encoded to the QRCode object
+    qr.add_data("http://13.235.83.97:4242/qrinfo?email="+email.replace("@","%40")) #Adding the data to be encoded to the QRCode object
     qr.make(fit = True) #Making the entire QR Code space utilized
     img = qr.make_image() #Generating the QR Code
     img.save(f'{"./qrCodes/"+email.replace("@","%40")}.png') #Saving the QR Code
@@ -64,12 +64,12 @@ def generateCode(data,email):
 
 @app.route('/qrinfo',methods=['GET'])
 def qrinfo():
-    data = request.get_json(force=True)
-    info=mongo.db.UserTickets.find_one({'email':data['email']})
+    data = request.args['email']
+    info=mongo.db.UserTickets.find_one({'email':data})
     passInfo="Pass has not been used yet."
     if (info["isPassUsed"]==True):
         passInfo="Pass Has been used already."
-    return render_template("qrCode.html",name=info["name"],email=info["email"],pass_type=info["pass_type"],isPassUsed=info["isPassUsed"])
+    return render_template("qrCode.html",name=info["name"],email=info["email"],pass_type=info["pass_type"],isPassUsed=passInfo)
 
 @app.route('/api/userticket',methods=['GET','POST','PUT','DELETE'])
 def createUserTicket():
